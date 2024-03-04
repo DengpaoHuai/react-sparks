@@ -1,6 +1,8 @@
 import { FC } from "react";
 import HomePage from "./pages/HomePage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/router";
 
 const App: FC = () => {
   const queryClient = new QueryClient({
@@ -14,7 +16,7 @@ const App: FC = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HomePage />
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 };

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getPlanets } from "../services/planet.service";
-
+import { Link, useNavigate } from "react-router-dom";
 type Planet = {
   name: string;
   population: string;
@@ -25,8 +25,22 @@ const HomePage = () => {
     queryFn: () => getPlanets(page),
   });
 
+  const navigate = useNavigate();
+
+  const redirectToSecondPage = () => {
+    navigate("/second");
+  };
+
   return (
     <>
+      <Link to="/second">vers la page</Link>
+      <button
+        onClick={() => {
+          redirectToSecondPage();
+        }}
+      >
+        vers la page
+      </button>
       {data?.results.map((planet) => (
         <div key={planet.name}>
           <h2>{planet.name}</h2>
