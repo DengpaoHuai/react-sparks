@@ -1,9 +1,10 @@
 import { FC } from "react";
-import HomePage from "./pages/HomePage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router-dom";
 import router from "./router/router";
 import MoviesContextProvider from "./contexts/MoviesContextProvider";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 const App: FC = () => {
   const queryClient = new QueryClient({
@@ -16,11 +17,13 @@ const App: FC = () => {
   });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <MoviesContextProvider>
-        <RouterProvider router={router} />
-      </MoviesContextProvider>
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <MoviesContextProvider>
+          <RouterProvider router={router} />
+        </MoviesContextProvider>
+      </QueryClientProvider>
+    </Provider>
   );
 };
 

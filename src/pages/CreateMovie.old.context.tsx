@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRef } from "react";
-import { useDispatch } from "react-redux";
-import { createMovie } from "../store/slices/moviesSlice";
+import { useMovie } from "../contexts/MoviesContextProvider";
 
 type Inputs = {
   title: string;
@@ -20,7 +19,7 @@ const CreateMovie = () => {
     formState: { errors },
   } = useForm<Inputs>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { add_Movie } = useMovie();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     fetch("https://crudcrud.com/api/e6df3548c2bd4e0d925c9d788f20a0c5/movies", {
@@ -32,7 +31,7 @@ const CreateMovie = () => {
     })
       .then((item) => item.json())
       .then((data) => {
-        dispatch(createMovie(data));
+        add_Movie(data);
         navigate("/list");
       });
   };

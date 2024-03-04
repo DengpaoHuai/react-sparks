@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
-import { useMovie } from "../contexts/MoviesContextProvider";
+import { useSelector } from "react-redux";
+import { StoreType, useCustomDispatch } from "../store/store";
+import { useEffect } from "react";
+import { fetchMovies } from "../store/asyncThunks/MoviesThunk";
 
 const ListMovies = () => {
-  const { movies } = useMovie();
+  const { movies } = useSelector((state: StoreType) => state.movies);
+  const dispatch = useCustomDispatch();
+
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, []);
 
   return (
     <div>
