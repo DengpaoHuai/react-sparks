@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router-dom";
 import router from "./router/router";
+import MoviesContextProvider from "./contexts/MoviesContextProvider";
 
 const App: FC = () => {
   const queryClient = new QueryClient({
@@ -16,7 +17,9 @@ const App: FC = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <MoviesContextProvider>
+        <RouterProvider router={router} />
+      </MoviesContextProvider>
     </QueryClientProvider>
   );
 };

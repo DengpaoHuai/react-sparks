@@ -1,71 +1,72 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useRef } from "react";
+import { useMovie } from "../contexts/MoviesContextProvider";
+
+type Inputs = {
+  title: string;
+  director: string;
+  rating: number;
+  genre: string;
+  releaseDate: string;
+};
 
 const CreateMovie = () => {
-  const [title, setTitle] = useState("");
-  const [director, setDirector] = useState("");
-  const [rating, setRating] = useState(0);
-  const [genre, setGenre] = useState("");
-  const [releaseDate, setReleaseDate] = useState("");
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
   const navigate = useNavigate();
+  const { add_Movie } = useMovie();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
     fetch("https://crudcrud.com/api/e6df3548c2bd4e0d925c9d788f20a0c5/movies", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        title,
-        director,
-        rating,
-        genre,
-        releaseDate,
-      }),
-    }).then(() => {
-      setTitle("");
-      setDirector("");
-      setRating(0);
-      setGenre("");
-      setReleaseDate("");
-      navigate("/list");
-    });
+      body: JSON.stringify(data),
+    })
+      .then((item) => item.json())
+      .then((data) => {
+        add_Movie(data);
+        navigate("/list");
+      });
   };
+  console.log(register("title", { required: true }));
+
+  const title = useRef<HTMLInputElement>(null);
 
   return (
     <div>
-      <h1>Create Movie</h1>
-      <form onSubmit={handleSubmit}>
+      <h1 ref={title}>Create Movie</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
           placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          {...register("title", { required: true })}
         />
         <input
           type="text"
           placeholder="Director"
-          value={director}
-          onChange={(e) => setDirector(e.target.value)}
+          {...register("director", { required: true })}
         />
         <input
           type="number"
           placeholder="Rating"
-          value={rating}
-          onChange={(e) => setRating(parseInt(e.target.value))}
+          {...register("rating", { required: true })}
         />
         <input
           type="text"
           placeholder="Genre"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
+          {...register("genre", { required: true })}
         />
         <input
           type="text"
           placeholder="Release Date"
-          value={releaseDate}
-          onChange={(e) => setReleaseDate(e.target.value)}
+          {...register("releaseDate", { required: true })}
         />
         <button type="submit">Create</button>
       </form>
